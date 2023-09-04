@@ -1,0 +1,294 @@
+---
+title: "dendrometry: Narcisse' Useful Functions (in Progress)"
+author: "Narcisse Yehouenou"
+date: "`r Sys.Date()`"
+output:  
+  html_document:
+    theme: journal
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{HTML browser interface for user guide.}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = FALSE,
+  comment = "#>"
+)
+```
+
+
+# The `dendrometry` r package 
+## Description
+The r package `dendrometry` is an implementation in R language of forests 
+estimations methods such as dendrometric parameters of trees and structural 
+parameters of tree populations. The objective is to provide an user-friendly R 
+package for researchers, ecologists, foresters, statisticians, loggers and 
+others persons who deal with forest inventory data. Useful conversion of angle 
+value from degree to radian, conversion from angle to slope (in percentage) and 
+their reciprocals as well as principal angle determination are also included. 
+Position and dispersion parameters usually found in forest studies are 
+implemented. The package contains Fibonacci series, its extensions and the 
+Golden Number computation. 
+
+## Package citation
+Please cite this package in publication or anywhere it comes to be
+useful for you. Using `citation` R function is a simple way to get this
+package references on R interface. The function also provides a BibTeX
+entry for La-TeX users.
+
+```{r Citation}
+citation("dendrometry")
+```
+
+# Forest estimations: Structural parameters
+Before use the package, load it first.
+
+```{r package}
+library(dendrometry)
+```
+
+## `Tree` data
+
+Let consider the package built-in `Tree` data.
+
+```{r data, collapse=TRUE}
+data("Tree")
+head(Tree)
+```
+
+To see `Tree`data description, use
+
+```{r data description, eval=FALSE}
+help("Tree")
+```
+
+## Diameter at Breast Height (DBH)
+
+Use `dbh` function to estimate trees diameters (DBH).Type `?dbh` for help.
+
+```{r dbh}
+Tree$DBH <- dbh(Tree$circum)
+head(Tree)
+```
+
+## Height estimation 
+Use `height` function to estimate tree height.Type `?height` for help.
+
+```{r Height estimation}
+Tree$upHeight <- height(distance = Tree$dist, top = Tree$up, base = Tree$down, 
+                        type = "angle", angleUnit = "deg")
+Tree$futHeight <- height(distance = Tree$dist, top = Tree$fut, base = Tree$down, 
+                        type = "angle", angleUnit = "deg")
+head(Tree)
+```
+
+### Let round data
+
+```{r round, eval=TRUE}
+Tree$DBH <- round(Tree$DBH, 2)
+Tree$upHeight <- round(Tree$upHeight, 2)
+Tree$futHeight <- round(Tree$futHeight, 2)
+Tree
+```
+
+## Compute slope
+
+Ones could need converting angle values to slope. The `angle2slope` function 
+does it easily. The reciprocal of this function is `slope2angle`.
+
+```{r slope}
+Tree$up.slope <- angle2slope(Tree$up)
+Tree$up.slope <- round(Tree$up.slope)
+Tree 
+```
+
+## Individual basal area
+
+The basal area of each tree is computed with `basal_i` function.
+
+```{r ind basal}
+Tree$basal <- basal_i(dbh = Tree$DBH/100)
+Tree$basal <- round(Tree$basal, 4)
+Tree
+```
+
+DBH is divided by **100** in order to convert DBH to meter (m). This conversion 
+is optional and depends on the study methodology.
+
+## Lorey's mean height
+The Lorey's mean height is computed via `loreyHeight` function.
+```{r Lorey}
+Lorey <- loreyHeight(basal = Tree$basal, height = Tree$upHeight)
+Lorey
+```
+
+**Note:** Simple mean of height is different from Lorey's mean height.
+
+```{r Lorey \' s and simple mean diffrence, echo=FALSE}
+Height.Mean <- mean(Tree$upHeight)
+Height <- c(Height.Mean, Lorey)
+names(Height) <- c("Mean of Height(m)" ,"Lorey height(m)")
+Height
+```
+
+## Mean diameter
+The mean diameter  is computed with `diameterMean` function.
+```{r Mean diameter}
+Dm <- diameterMean(Tree$DBH)
+Dm
+```
+
+**Note:** Simple mean of diameter is different from mean diameter (Dm).
+
+```{r Mean diameter vs simple mean of dbh, echo=FALSE}
+Diam <- mean(Tree$DBH)
+Diameter <- c(Diam, Dm)
+names(Diameter) <- c("Simple mean of Diameter(cm)" ,"Mean diameter(cm)")
+Diameter
+```
+
+# Logging: Dendrometric characteristics 
+This section is illustrated with the `Logging` data set. 
+ 
+## The `Logging` dataset
+The `Logging` data are in a data frame with twenty five observations and eight 
+variables assumed collected on trees and/or logs. Type `?Logging` for details.
+
+```{r Logging dataset}
+data("Logging")
+summary(Logging)
+```
+
+## `factorize` a dataset
+The variable `tree` is considered as *character* rather than *factor*. To 
+overcome that and make easier manipulation one changes *character* variables to
+*factor* variables. To do that for whole dataset, use function `factorize`. Type
+`?factorize` for help.
+
+```{r factorize}
+class(Logging$tree)
+Logging <- factorize(data = Logging)
+class(Logging$tree)
+summary(Logging)
+head(Logging, 4)
+attach(Logging)
+```
+
+
+## The decrease coefficient
+This coefficient expresses the ratio between the diameter (or circumference) at 
+mid-height of the bole and the diameter (or circumference) measured at breast
+height. The `decrease` function is used to compute this coefficient. Type
+`?decrease` for help.
+```{r decrease}
+Decrease <- decrease(middle = diametreMedian, breast = diametreBase) 
+Decrease
+```
+
+## The reduction coefficient
+The reduction coefficient is the ratio between the difference in size at breast 
+height and mid-height on the one hand, and the size at breast height on the 
+other. It is thus the complement to 1 of the coefficient of decrease. 
+The `reducecoef` function is used to compute the reduction coefficient. Type
+`?reducecoef` for help.
+```{r reducecoef}
+Reduce <- reducecoef(middle = diametreMedian, breast = diametreBase)
+Reduce
+```
+
+## Metric decay
+The average metric decay expresses the difference, in centimeters per meter, 
+between the diameter (or circumference) at breast height and its diameter at 
+mid-height of a stem related to the difference between the height at mid-height 
+and that at breast height. The average metric decay is computed using
+`decreaseMetric` function.Type `?decreaseMetric` for help.
+```{r decreaseMetric}
+DecMetric <- decreaseMetric(dmh = diametreMedian, dbh = diametreBase, 
+                            mh = hauteur/2)
+DecMetric
+```
+In case of DBH considered at other height than 1.3 m, the breast height is set 
+via `bh` argument of `decreaseMetric` function.
+```{r decreaseMetric 1.5}
+DecMetric1.5 <- decreaseMetric(dmh = diametreMedian, dbh = diametreBase, 
+                               mh = hauteur/2, bh = 1.5)
+DecMetric1.5
+```
+
+## Logs and trees volume computation 
+The wood volume of logs and trees is computed withe `volume` function. Type 
+`?volume` for help. The `Huber`, `Smalian`, `Cone` and `Newton` methods are 
+implemented. When `successive` is set *TRUE*, the selected method is implemented 
+on all log belonging to the same tree. The sum of logs volume is returned per 
+tree. Type `?volume` for details.
+
+### On foot or one log tree volume
+```{r volume}
+#HUBER
+VolHub <- volume(height = hauteur, dm = diametreMedian, method = "huber")
+#SMALIAN
+VolSmal <- volume(height = hauteur, do = diametreBase, ds = diametreSection, 
+       method = "smalian")
+#CONE
+VolCone <- volume(height = hauteur, do = diametreBase, ds = diametreSection, 
+       method = "cone")
+#NEWTON 
+VolNew <- volume(height = hauteur, do = diametreBase, dm = diametreMedian, 
+       ds = diametreSection, method = "newton")
+```
+Make a data frame of tree volumes per method.
+```{r Trees volume}
+TreeVol <- data.frame(tree, VolHub, VolSmal, VolCone, VolNew)
+head(TreeVol)
+```
+
+### Tree volume from its logs volume sum
+Now, let consider the variable `tree` as the tree to which belong the log; such 
+that each observation of the data set stands for characteristics of a log. It's 
+like trees are cut in many logs. Then those logs are measured. All logs from the 
+same tree have the same value for variable `tree`. Then let compute trees volume 
+with sum of all logs obtained from each tree. The `successive` argument should 
+then be set to `TRUE`.
+```{r volume successive}
+#HUBER
+VolHubSuc <- volume(height = hauteur, dm = diametreMedian, method = "huber", 
+       successive = TRUE, log = tree)
+#SMALIAN
+VolSmalSuc <- volume(height = hauteur, do = diametreBase, ds = diametreSection, 
+       method = "smalian", successive = TRUE, log = tree)
+#CONE
+VolConSuc <- volume(height = hauteur, do = diametreBase, ds = diametreSection, 
+       method = "cone", successive = TRUE, log = tree)
+#NEWTON
+VolNewSuc <- volume(height =  hauteur, do = diametreBase, dm = diametreMedian, 
+       ds = diametreSection, method = "newton", successive = TRUE, 
+       log = tree)
+VolNewSuc
+volume(height =  hauteur, do = diametreBase, dm = diametreMedian, 
+       ds = diametreSection, method = "newton", successive = TRUE, log = tree)
+```
+
+Make a data frame of tree volumes per method.
+```{r Tree volume successive}
+TreeVolSuc <- data.frame(tree = unique(tree), VolHubSuc, VolSmalSuc, VolConSuc, VolNewSuc)
+TreeVolSuc
+```
+
+## The shape coefficient 
+The shape coefficient of the tree is the ratio of the actual volume of the tree 
+to the volume of a cylinder having as base the surface of the section at 1.3 m 
+(or a given breast height) and as length, the height of the tree.
+
+```{r shape coefficient}
+Shape <- shape(volume = VolNewSuc, height = hauteur, dbh = perimetreMedian)
+Shape
+```
