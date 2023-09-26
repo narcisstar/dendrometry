@@ -66,7 +66,7 @@
 #' simple adjusted is desired. Only "cauchran" is implemented now.
 #'
 #' @param cv variation coefficient.
-# @note Population size to be considered as large or infinite heavily depends on error margin. Lower error margin increases population size to be conidered as large or infinite. For errorMargin = .05, size = 152 231 and cauchran 151 760 when confLev = .05
+#' @note Population size to be considered as large or infinite heavily depends on error margin. Lower error margin increases population size to be conidered as large or infinite. For errorMargin = .05, size = 152 231 and cauchran 151 760 when confLev = .05
 #' @return The sample size.
 
 #' @examples sampleSize(confLev = .95, popPro = 0.4, errorMargin = .05)
