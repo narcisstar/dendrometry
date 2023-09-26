@@ -189,7 +189,7 @@ makedata <- function(data, factor1 = "", factor2 = "", factor3 = ""){
   }
   else
     warning("Any of 'factor1', 'factor2' and 'factor3' are not defined. The same data are returned.")
-    #stop("At least one of 'factor1', 'factor2' and 'factor3' should be defined.")
+  #stop("At least one of 'factor1', 'factor2' and 'factor3' should be defined.")
   return(data)
 }
 
@@ -224,9 +224,9 @@ factorise <- factorize
 #' @return A vector of all element of the argument \code{data}.
 #' @export
 stacking <- function(data){
-   if(inherits(data, what = "list"))
-      data <- list2DF(data)
-   as.vector(as.matrix(data))
+  if(inherits(data, what = "list"))
+    data <- list2DF(data)
+  as.vector(as.matrix(data))
 }
 
 
@@ -391,9 +391,9 @@ dbh <- function(circum){
 #' @seealso \code{\link{height}} for tree  height, \code{\link{dbh}} for diameter.
 #' @export
 circum <- function(dbh){
-   if (is.numeric(dbh))
-      return(dbh * pi)
-   else stop("must be numeric")
+  if (is.numeric(dbh))
+    return(dbh * pi)
+  else stop("must be numeric")
 }
 
 #' Angle to slope
@@ -456,16 +456,16 @@ slope2angle <- function(slope, angleUnit = c("deg", "rad")){
 #' @export
 #'
 distanceH <- function(distance, angle, type = c("angle", "slope"),
-                     angleUnit = c("deg", "rad")){
-   if (prod(type == c("angle", "slope")) || type == "slope")
-      d <- distance * cos(slope2angle(slope = angle, angleUnit = "rad"))
-   else{
-      if(prod(angleUnit == c("deg", "rad")) || angleUnit == "deg")
-         d <- distance * cos(rad(angle))
-      else if (angleUnit == "rad")
-         d <- distance * cos(angle)
-      }
-   return(d)
+                      angleUnit = c("deg", "rad")){
+  if (prod(type == c("angle", "slope")) || type == "slope")
+    d <- distance * cos(slope2angle(slope = angle, angleUnit = "rad"))
+  else{
+    if(prod(angleUnit == c("deg", "rad")) || angleUnit == "deg")
+      d <- distance * cos(rad(angle))
+    else if (angleUnit == "rad")
+      d <- distance * cos(angle)
+  }
+  return(d)
 }
 
 
@@ -512,11 +512,11 @@ principal <- function(angle, angleUnit = c("deg", "rad")){
 #' @details If \code{circum} is given, \code{dbh} is not used.
 #' @export
 basal_i <- function(dbh = NULL, circum = NULL){
-   if(is.numeric(circum))
-      dbh <- dbh(circum = circum)
-   else if(!is.numeric(dbh))
-      stop("Should be numeric.")
-   return(pi * .25 * dbh**2)
+  if(is.numeric(circum))
+    dbh <- dbh(circum = circum)
+  else if(!is.numeric(dbh))
+    stop("Should be numeric.")
+  return(pi * .25 * dbh**2)
 }
 
 #' @export
@@ -668,7 +668,7 @@ decreaseMetric <- function(dmh, dbh, mh, bh = 1.3){
     v <- pi * (do**2 + do * ds + ds**2) * height/12
   else if(!is.null(circumo) && !is.null(circums))
     v <- pi * (dbh(circumo)**2 + dbh(circumo) * dbh(circums) + dbh(circums)**2) *
-        height/12
+      height/12
   if(successive)
     v <- sapply(unique(log), FUN = function(i) sum(v[log == i]))
   return(v)
@@ -688,7 +688,7 @@ decreaseMetric <- function(dmh, dbh, mh, bh = 1.3){
     v <- pi * (do**2 + 4 * dm**2 + ds**2) * height/24
   else if(!is.null(circum) && !is.null(circumo) && !is.null(circums))
     v <- pi * (dbh(circumo)**2 + 4 * dbh(circum)**2 + dbh(circums)**2) *
-        height/24
+      height/24
 
   if(successive)
     v <- sapply(unique(log), FUN = function(i) sum(v[log == i]))
@@ -740,27 +740,27 @@ volume <- function(height, dm = NULL, do = NULL, ds = NULL, circum = NULL,
   if(all(!successive, !is.null(log)))
     warning("Don't specify 'log' when 'successive' is not TRUE")# unused arg ...
   if(method == "huber") return(.huberMethod(height = height, dm = dm,
-                                           circum = circum, log = log,
-                                           successive = successive))
+                                            circum = circum, log = log,
+                                            successive = successive))
   else if(method == "smalian") return(.smalianMethod(height = height, do = do,
-                                                      circumo = circumo,
-                                                      ds = ds,
-                                                      circums = circums,
-                                                      log = log,
-                                                      successive = successive))
+                                                     circumo = circumo,
+                                                     ds = ds,
+                                                     circums = circums,
+                                                     log = log,
+                                                     successive = successive))
 
   else if (method == "cone") return(.coneMethod(height = height, do = do,
-                                               ds = ds, circumo = circumo,
-                                               circums = circums,
-                                               successive = successive,
-                                               log = log))
+                                                ds = ds, circumo = circumo,
+                                                circums = circums,
+                                                successive = successive,
+                                                log = log))
   else if (method == "newton") return(.newtonMethod(height = height, do = do,
-                                                   dm = dm, ds = ds,
-                                                   circumo = circumo,
-                                                   circum = circum,
-                                                   circums = circums,
-                                                   successive = successive,
-                                                   log = log))
+                                                    dm = dm, ds = ds,
+                                                    circumo = circumo,
+                                                    circum = circum,
+                                                    circums = circums,
+                                                    successive = successive,
+                                                    log = log))
 }
 
 
@@ -853,7 +853,7 @@ diameterMean <- function(dbh, factor1 = "", factor2 = "", factor3 = "", data){
       })
   }
   else if(any(c(factor1, factor2, factor3) != ""))
-      stop("Any of 'factor1', 'factor2'and/or 'factor3' is not used when 'data' is not defined.")
+    stop("Any of 'factor1', 'factor2'and/or 'factor3' is not used when 'data' is not defined.")
   else
     d <- diamMean(dbh = dbh)
 
@@ -978,7 +978,7 @@ paramDendro <- function(data, Site = "Releve", area = .15, DBH = "DBH",
                         height = "Height", houppier = "houppier", group = TRUE){
   data <- na.omit(data)
   DIM <- dim(data)
-  head(data)
+  #head(data)
 
   res <-setNames(as.data.frame(table(data[[Site]])/area), c("Site", "Density"))
 
@@ -987,8 +987,8 @@ paramDendro <- function(data, Site = "Releve", area = .15, DBH = "DBH",
 
   res$basal <- basal(dbh = DBH, area = area, factor1 = Site, data = data)
   browser()
-  head(data[height])
-  head(res)
+  #head(data[height])
+  #head(res)
 
   res$MeanHeight <- mean(data[[height]])
   a <- (levels(res$Site))
@@ -999,7 +999,7 @@ paramDendro <- function(data, Site = "Releve", area = .15, DBH = "DBH",
   b
   sapply(data[[Site]], mea)
   #res$LoreyHeight <- loreyHeight() # adjust pkg function
-  head(res)
+  #head(res)
 }
 
 #' Structural parameter
@@ -1077,7 +1077,7 @@ biomass <- function(DBH, height, wdensity){
   AGB <- 0.0673 * (wdensity * DBH**2 * height)^.976
   BGB <- 0.37 * AGB
   TB <- 1.37 + AGB
-  return(bind(TB, AGB, BGB))
+  return(setNames(c(TB, AGB, BGB), c("TB", "AGB", "BGB")))
 }
 
 
@@ -1109,7 +1109,8 @@ spNmReduce <- function(name, sep = " "){
 #' @param plot Logical. Should raters be plotted ?
 #' @param which character, indicates data in which duplicates should be checked.
 #' 'c' for coordinates, 'd' for data without coordinates, 'b' for both.
-#'
+#' @importFrom raster getValues stack ncell
+#' @importFrom terra plot crop xyFromCell
 #' @export
 raster2df <- function(biodata, ext = c(0, 4, 6, 14), rmdup = TRUE, plot = TRUE,
                       which = "c"){
@@ -1118,7 +1119,7 @@ raster2df <- function(biodata, ext = c(0, 4, 6, 14), rmdup = TRUE, plot = TRUE,
     bio[[i]] <- crop(biodata[[i]], ext)
   biodata <- stack(bio)
 
-  if(plot) plot(biodata)
+  if(plot) plot(biodata) # needs debug !!!
   myvar <- getValues(biodata) #we will have NA for non-land points
   myxy <- xyFromCell(biodata[[1]],cell=1:ncell(biodata[[1]])) #central coordinates of cells
   biodata <-cbind.data.frame(myxy, myvar)
@@ -1170,7 +1171,7 @@ rfreq <- function(x) 100 * x/sum(x)
 #'                  main = "Weibull adjustment", line.col = "red",
 #'                  legendPos = "right")
 #' res
-#' @import ForestFit
+#' @import ForestFit graphics
 #' @export
 adjWeibull <- function(x, amplitude = 10, shape, main = NULL,
                        xlab = 'Diameter class (cm)',
@@ -1180,9 +1181,9 @@ adjWeibull <- function(x, amplitude = 10, shape, main = NULL,
                        legendPos = "topright", ...){
   if(missing(shape)) shape = 3
   #if("main" %in% ...names())
-    #main = ...elt(which(...names() == "main"))
+  #main = ...elt(which(...names() == "main"))
   #else
-    #main = NULL
+  #main = NULL
 
   qq <- hist(x, breaks = seq(min(x), max(x) + 1, 1), plot = FALSE)
 
@@ -1194,7 +1195,7 @@ adjWeibull <- function(x, amplitude = 10, shape, main = NULL,
 
   #estimation of parameteres
   est = ForestFit::fitWeibull(data = x, location = TRUE, method = "mps",
-                   starts = starts)
+                              starts = starts)
   estimate <- setNames(c(est$estimate), nm = c("shape", "scale", "location"))
   measures <- setNames(c(est$measures), nm = colnames(est$measures))
   est <- list(estimate = estimate, measures = measures)
@@ -1218,14 +1219,14 @@ adjWeibull <- function(x, amplitude = 10, shape, main = NULL,
        main = main, ...)
 
   if(mid)
-    curve(f, col = line.col, add = T, from = min(qq$mids), to = max(qq$mids))
+    graphics::curve(f, col = line.col, add = T, from = min(qq$mids), to = max(qq$mids))
   else
     curve(f, col = line.col, add = T, from = min(qq$breaks), to = max(qq$breaks))
-  legend(legendPos, title = "Legend", title.col = "black", lty = c(1, 0, 0, 0),
-         lwd = 1, col = line.col, text.font = c(4, 5, 5, 5), box.lty = 0,
-         bty = "o", bg = "aliceblue", cex = 1,
-         legend = c("weibull", paste("a =", round(loc, 2)),
-                    paste("b =", round(scale, 2)), paste("g =", round(shape, 2))))
+  graphics::legend(legendPos, title = "Legend", title.col = "black", lty = c(1, 0, 0, 0),
+                   lwd = 1, col = line.col, text.font = c(4, 5, 5, 5), box.lty = 0,
+                   bty = "o", bg = "aliceblue", cex = 1,
+                   legend = c("weibull", paste("a =", round(loc, 2)),
+                              paste("b =", round(scale, 2)), paste("g =", round(shape, 2))))
 
   return(invisible(est))
 }
@@ -1285,6 +1286,7 @@ diversityvariables <- function (x, y, digits = 8, base = 2)
 }
 
 #' Function modified from 'BiodiversityR' package to allow 'base' argument
+#' @importFrom bootstrap jackknife
 #' @export
 diversityresult <- function (x, y = NULL, factor = NULL, level = NULL, base = 2,
                              index = c("Shannon",
@@ -1436,8 +1438,8 @@ diversityresult <- function (x, y = NULL, factor = NULL, level = NULL, base = 2,
       diversityresult0(xdata2, index = index, method = "pooled", base = base)
     }
     if (nrow(x) > 1) {
-      result2 <- bootstrap::jackknife(1:nrow(x), thetadiv,
-                                      x, index = index)
+      result2 <- jackknife(1:nrow(x), thetadiv,
+                           x, index = index)
       result2$jack.estimate <- mean(as.numeric(result2$jack.values),
                                     na.rm = T)
     }
@@ -1496,5 +1498,3 @@ diversityresult <- function (x, y = NULL, factor = NULL, level = NULL, base = 2,
 #basalContr <- function(dbh, species, choice, area, factor1 = "", factor2 = "", factor3 = "", data, constant = 100){
 
 #}
-
-
