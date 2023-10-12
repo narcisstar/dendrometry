@@ -37,7 +37,7 @@ devtools::install_github("narcisstar/dendrometry")
 
 ## Usage
 
-For detailed usage examples and documentation, please refer to the package documentation and vignettes. You can find the [dendrometry](complete documentation at https://cran.r-project.org/web/packages/dendrometry/vignettes/dendrometry.html) .
+For detailed usage examples and documentation, please refer to the package documentation and vignettes. You can find the complete documentation at https://cran.r-project.org/web/packages/dendrometry/vignettes/dendrometry.html .
 
 ## License
 
